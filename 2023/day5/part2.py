@@ -1,5 +1,5 @@
-#f = open("local\input.txt", "r")
-f = open("local/test.txt", "r")
+f = open("2023/day5/input.txt", "r")
+#f = open("2023/day5/test.txt", "r")
 lines = f.readlines()
 
 # parse seeds and maps
@@ -43,7 +43,7 @@ for idx, line in enumerate(lines):
     dest = specialNumber(int(lineSplits[1]), int(lineSplits[2]))
     src = specialNumber(int(lineSplits[0]), int(lineSplits[2]))
 
-    map_map[map_flag][int(lineSplits[0])] = (dest, src)
+    map_map[map_flag][int(lineSplits[0])] = {'dest': dest, 'src': src}
 
 # sort seeds
 seeds = sorted(seeds, key=lambda seed: seed.rangeStart)
@@ -56,7 +56,7 @@ mapKeys.reverse()
 # sorting layer maps keys
 innerMapKeys = {}
 for mapKey in mapKeys:
-    map_map[mapKey][0] =  specialNumber(0, 0)
+    if 0 not in map_map[mapKey]: map_map[mapKey][0] = {'dest': specialNumber(0, 1), 'src': specialNumber(0, 1)}
     innerMapKeys[mapKey] = list(map_map[mapKey].keys())
     # if 0 not in innerMapKeys[mapKey]: innerMapKeys[mapKey].insert(0, 0)
     innerMapKeys[mapKey].sort()
@@ -80,13 +80,16 @@ def hashAllLayers(val):
 # mapKeys / List[mapKey]
 # mapKey / String
 # innerMapKeys[mapKeys] / List[int]
-print(innerMapKeys.items())
+print(map_map['humidity-to-location'])
 print()
 tenMillion = 10000000
 
 # actually location->humditity
 for rangeStart in innerMapKeys['humidity-to-location']:
     print(rangeStart)
+    print(map_map['humidity-to-location'][rangeStart]['src'].rangeStart)
+    print(map_map['humidity-to-location'][rangeStart]['src'].rangeEnd)
+    print()
 
 
 # imagine water flowing into multiple streams
