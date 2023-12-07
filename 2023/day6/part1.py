@@ -24,5 +24,3 @@ for i in range(numRaces):
     res *= waysToWin
     print((time, waysToWin))
 print(res)
-#test ans: 288
-#823680 incorrect answer
