@@ -18,5 +18,3 @@ for timeHeld in range(1, time - 1):
     if timeHeld * timeRemaining > distance:
         waysToWin += 1
 print((time, waysToWin))
-
-# test ans: 71503
