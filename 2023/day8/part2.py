@@ -1,10 +1,10 @@
-f = open("input.txt", "r")
-#f = open("test2-1.txt", "r")
+f = open("2023\day8\input.txt", "r")
+#f = open("2023/day8/test2-1.txt", "r")
 lines = f.read()
 
 instruct, mappings = lines.split('\n\n')
 
-instruct  = [char for char in instruct]
+instruct = [char for char in instruct]
 
 mappings = mappings.split('\n')
 map = {}
@@ -15,64 +15,58 @@ for mapping in mappings:
     dest = dest.replace('(', '').replace(')', '').replace(',', '')
     left, right = dest.split()
     map[src] = (left, right)
-#print(map)
 
 positions = []
 for src in map.keys():
     if src[2] == 'A':
-        positions.append(src)
+        positions.append((src, src))
 
 Zpositions = []
-ZcycleLen = {}
 for src in map.keys():
     if src[2] == 'Z':
-        Zpositions.append(src)
-        ZcycleLen[src] = (0, src)
+        Zpositions.append((src, src))
+        #ZtoZ[src] = (0, src) # Zpos:(distToNextZ, nextZpos)
 
-# distance of Zposition -> Zpositino
+#print(("positions", positions))
+#print(("Zpositions", Zpositions))
+
+
+# distance of Zposition to next Z
+ZtoZ = {}
 steps = 0
 ptr = -1
 while True:
     steps += 1
-
+    
     ptr += 1
     if ptr == len(instruct):
         ptr = 0
     move = instruct[ptr]
     moveIndex = ['L', 'R'].index(move)
 
-    newZPositions = []
-    for pos in Zpositions:
-        newZPositions.append(map[pos][moveIndex])
-    Zpositions = newZPositions
-
-    newZPositions = []
-    for pos in Zpositions:
-        if pos[2] == 'Z':
-            ZcycleLen[pos] = steps
+    newZpositions = []
+    for pos, src in Zpositions:
+        nextPos = map[pos][moveIndex]
+        if nextPos[2] == 'Z':
+            ZtoZ[src] = (steps, nextPos)
         else:
-            newZPositions.append(pos)
-    Zpositions = newZPositions
+            newZpositions.append((nextPos, src))
+    Zpositions = newZpositions
 
-    # if all positions have last char of 'Z'
     if len(Zpositions) == 0:
         break
 
+#print()
+#print(ZtoZ)
+#print(positions)
+#print()
 
-
-posToZLen = {}
-
-newPositions = []
-for pos in positions:
-    newPositions.append((pos, pos))
-positions = newPositions
-
-
-steps = -1
+posToZ = {}
+steps = 0
 ptr = -1
 while True:
     steps += 1
-
+    
     ptr += 1
     if ptr == len(instruct):
         ptr = 0
@@ -81,37 +75,95 @@ while True:
 
     newPositions = []
     for pos, src in positions:
-        if pos[2] == 'Z':
-            posToZLen[src] = (steps, pos)
+        nextPos = map[pos][moveIndex]
+        if nextPos[2] == 'Z':
+            posToZ[src] = (steps, nextPos)
         else:
-            newPositions.append((map[pos][moveIndex], src))
+            newPositions.append((nextPos, src))
     positions = newPositions
 
     if len(positions) == 0:
         break
 
+#print(("ZtoZ", ZtoZ))
+#print(("posToZ", posToZ))
 
-
-print(ZcycleLen)
-print(posToZLen)
-numAPos = len(posToZLen.keys())
+numAPos = len(posToZ.keys())
 from collections import defaultdict
-seenNums = defaultdict(int)
-print(numAPos)
-mult = 0
-flag = True
+seenNums = defaultdict(lambda: 0)
+#print(numAPos)
+'''
 res = 0
+mult = 0 # each element should have its own sum instead
+flag = True
 while flag:
-    for distToZ, endPos in posToZLen.values():
-        totDist = distToZ + mult * ZcycleLen[endPos]
-        #print((distToZ, endPos))
-        #print(totDist)
-        seenNums[totDist] += 1
-        if seenNums[totDist] == numAPos:
+    for src, temp in posToZ.items():
+        distToZ, Zpos = temp
+        #print((distToZ, Zpos))
+        calcDist = distToZ + mult * ZtoZ[Zpos][0]
+
+        seenNums[calcDist] += 1
+        if seenNums[calcDist] == numAPos:
             flag = False
-            res = totDist
-    
+            res = calcDist
+            break
     mult += 1
-            
 print(res)
-# 19783 wrong
+'''
+numbers = [tup[0] for tup in ZtoZ.values()]
+print(numbers)
+# all numbers have a prime factor of 271 (found using google)
+
+# need to find prime number factors for numbers
+maxNumber = max(numbers)
+#print(maxNumber)
+
+# find the max possible prime 
+from math import sqrt
+searchRangeLen = int(sqrt(maxNumber))
+print(searchRangeLen)
+
+# search for possible primes
+primes = set()
+for i in range(searchRangeLen):
+    if i == 1 or i == 0:
+        continue
+    isPrime = True
+    for prime in primes:
+        if i % prime != 0:
+            isPrime = False
+    if isPrime:
+        primes.add(i)
+
+from collections import defaultdict
+factorCount = defaultdict(int)
+for number in numbers:
+    for factor in range(1, searchRangeLen):
+        remainder = number % factor
+        if remainder != 0:
+            continue
+        factorCount[prime] += 1
+        factorCount[number / factor] += 1
+
+numbersCount = len(numbers)
+commonFactors = []
+for factor, count in factorCount.items():
+    if count == numbersCount:
+        commonFactors.append(factor)
+
+commonFactors.sort(reverse=True)
+for factor in commonFactors:
+    for i in range(len(numbers)):
+        #number = numbers[i]
+        numbers[i] /= factor
+
+print(numbers)
+res = 1
+for number in numbers:
+    res *= number
+print(res)
+for factor in commonFactors:
+    res *= factor
+print(res)
+
+# 14299763833181
