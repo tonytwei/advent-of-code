@@ -1,5 +1,5 @@
 f = open("2023\day8\input.txt", "r")
-#f = open("2023/day8/test2-1.txt", "r")
+#f = open("2023/day8/test3.txt", "r")
 lines = f.read()
 
 instruct, mappings = lines.split('\n\n')
