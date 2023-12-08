@@ -27,7 +27,7 @@ ZcycleLen = {}
 for src in map.keys():
     if src[2] == 'Z':
         Zpositions.append(src)
-        ZcycleLen[src] = 0
+        ZcycleLen[src] = (0, src)
 
 # distance of Zposition -> Zpositino
 steps = 0
