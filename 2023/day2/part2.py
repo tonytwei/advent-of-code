@@ -1,6 +1,7 @@
-import re
 f = open("2023/day2/input.txt", "r")
 #f = open("2023/day2/test.txt", "r")
+
+import re
 
 def solve(line):
     colourMin = {}

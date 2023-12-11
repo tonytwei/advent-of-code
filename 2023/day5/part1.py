@@ -49,7 +49,6 @@ for seed in seeds:
             val = dest + keyDiff
             break
 
-
     print(val)
     res = min(res, val)
 print(res)

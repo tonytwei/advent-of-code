@@ -16,7 +16,6 @@ for mapping in mappings:
     dest = dest.replace('(', '').replace(')', '').replace(',', '')
     left, right = dest.split()
     map[src] = (left, right)
-#print(map)
 
 steps = 0
 ptr = -1
@@ -36,8 +35,6 @@ while True:
         pos = map[pos][0]
     elif move == 'R':
         pos = map[pos][1]
-
-
 
 print(steps)
 

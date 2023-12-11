@@ -16,7 +16,6 @@ def solve(numbers):
             newRow.append(newNumber)
         numbers = newRow
         rows.append(newRow)
-    #print(rows)
 
     rows.reverse()
     res = 0

@@ -40,13 +40,6 @@ def findHandStrength(hand):
     if countTwo and countThree:
         return 2
     
-    # numJokes = 1, 2, 3
-    # numJokers, len(map.keys()) - 1
-    # must have two other cards
-
-    # numJokers = 1, (2, 2), (3, 1)        (0, 4)
-    # numJokers = 2, (0, 3), (1, 2)
-    # numJokers = 3, (0, 2), (1, 1)
     if numJokers == 1 and len(map.keys()) == 2:
         return 2
     if numJokers == 2 and len(map.keys()) == 1 and 3 in map.values():
@@ -97,8 +90,6 @@ for line in lines:
     handsMap[handStrength].append((hand, bet))
 handsMap = dict(sorted(handsMap.items()))
 
-
-
 cards = ['A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J']
 
 def compare(hand1, hand2):
@@ -114,7 +105,6 @@ def compare(hand1, hand2):
         elif index1 > index2:
             return 1
     return 0
-
 
 concatHandBetList = []
 for handStrength, handList in handsMap.items():

@@ -1,5 +1,6 @@
 f = open("2023/day3/input.txt", "r")
 #f = open("2023/day3/test.txt", "r")
+
 text = [[char for char in line] for line in f]
 
 gearLocations = {}

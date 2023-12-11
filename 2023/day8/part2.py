@@ -25,11 +25,6 @@ Zpositions = []
 for src in map.keys():
     if src[2] == 'Z':
         Zpositions.append((src, src))
-        #ZtoZ[src] = (0, src) # Zpos:(distToNextZ, nextZpos)
-
-#print(("positions", positions))
-#print(("Zpositions", Zpositions))
-
 
 # distance of Zposition to next Z
 ZtoZ = {}
@@ -56,11 +51,6 @@ while True:
     if len(Zpositions) == 0:
         break
 
-#print()
-#print(ZtoZ)
-#print(positions)
-#print()
-
 posToZ = {}
 steps = 0
 ptr = -1
@@ -85,38 +75,15 @@ while True:
     if len(positions) == 0:
         break
 
-#print(("ZtoZ", ZtoZ))
-#print(("posToZ", posToZ))
-
 numAPos = len(posToZ.keys())
 from collections import defaultdict
 seenNums = defaultdict(lambda: 0)
-#print(numAPos)
-'''
-res = 0
-mult = 0 # each element should have its own sum instead
-flag = True
-while flag:
-    for src, temp in posToZ.items():
-        distToZ, Zpos = temp
-        #print((distToZ, Zpos))
-        calcDist = distToZ + mult * ZtoZ[Zpos][0]
 
-        seenNums[calcDist] += 1
-        if seenNums[calcDist] == numAPos:
-            flag = False
-            res = calcDist
-            break
-    mult += 1
-print(res)
-'''
 numbers = [tup[0] for tup in ZtoZ.values()]
 print(numbers)
-# all numbers have a prime factor of 271 (found using google)
 
 # need to find prime number factors for numbers
 maxNumber = max(numbers)
-#print(maxNumber)
 
 # find the max possible prime 
 from math import sqrt

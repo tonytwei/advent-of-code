@@ -1,5 +1,6 @@
-import re
 f = open("2023/day2/input.txt", "r")
+
+import re
 
 colourMax = {
     "red": 12,

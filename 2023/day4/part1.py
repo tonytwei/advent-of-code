@@ -1,6 +1,8 @@
 f = open("adventOfCode2023/day4/input.txt", "r")
 #f = open("adventOfCode2023/day4/test.txt", "r")
+
 lines = f.readlines()
+
 res = 0
 for line in lines:
     winningNumsStr, ourNumsStr = line.split(':')[1].split('|')
