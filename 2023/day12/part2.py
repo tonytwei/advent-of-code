@@ -25,15 +25,12 @@ def valid(nums, string):
 
 # backtracking
 def rec(resStr, resNums, buildStr, strPtr):
-    global a
-    global b
+    global counts
     if strPtr == len(resStr):
         if valid(resNums, buildStr):
+            start = buildStr[0]
             end = buildStr[-1]
-            if end == '.':
-                a += 1
-            elif end == '#':
-                b += 1
+            counts[(start, end)] += 1
         return
     
     resChar = resStr[strPtr]
@@ -52,26 +49,24 @@ def rec(resStr, resNums, buildStr, strPtr):
         buildStrCopy = buildStr + '#'
         rec(resStr, resNums, buildStrCopy, strPtr)
 
-def count(startCounts, dotCounts, hashCounts, endedDot, depth):
+def count(endedDot, depth):
     # index meanings
     # 0: ends in .
     # 1: ends in #
-    ans = 0
-    if depth == 0:
-        ans += startCounts[0] * count(startCounts, dotCounts, hashCounts, True, depth + 1)
-        ans += startCounts[1] * count(startCounts, dotCounts, hashCounts, False, depth + 1)
-        return ans
-    elif depth == MAX_SEARCH_DEPTH:
+    if depth == MAX_SEARCH_DEPTH:
         return 1
 
-    ans += dotCounts[0] * count(startCounts, dotCounts, hashCounts, True, depth + 1)
-    ans += dotCounts[1] * count(startCounts, dotCounts, hashCounts, False, depth + 1)
+    global counts
+    ans = 0
+    ans += counts[('.', '.')] * count(True, depth + 1)
+    ans += counts[('.', '#')] * count(False, depth + 1)
     if endedDot:
-        ans += hashCounts[0] * count(startCounts, dotCounts, hashCounts, True, depth + 1)
-        ans += hashCounts[1] * count(startCounts, dotCounts, hashCounts, False, depth + 1)
+        ans += counts[('#', '.')] * count(True, depth + 1)
+        ans += counts[('#', '#')] * count(False, depth + 1)
     return ans
 
-MAX_SEARCH_DEPTH = 2
+from collections import defaultdict
+MAX_SEARCH_DEPTH = 4
 res = 0
 for line in lines:
     resStr, resNums = line.split(" ")
@@ -79,24 +74,12 @@ for line in lines:
     resNums = [int(num) for num in resNums]
     print((resStr, resNums))
 
-    a = b = 0
+    counts = defaultdict(int)
     rec(resStr, resNums, "", 0)
-    startCounts = (a, b)
-
-    a = b = 0
     rec("." + resStr, resNums, "", 0)
-    dotCounts = (a, b)
-
-    a = b = 0
     rec("#" + resStr, resNums, "", 0)
-    hashCounts = (a, b)
-
-    print(startCounts)
-    print(dotCounts)
-    print(hashCounts)
-
     
-    count = count(startCounts, dotCounts, hashCounts, True, 0)
+    count = count(True, 0)
     print(("count", count))
     res += count
 
